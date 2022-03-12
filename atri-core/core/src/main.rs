@@ -1,3 +1,5 @@
+mod utils;
+
 use color_eyre::eyre::Result;
 use poem::{
     web::Html, Route, get, handler, EndpointExt, middleware::Tracing, Server, listener::TcpListener,
@@ -10,7 +12,7 @@ async fn main() -> Result<()> {
 
     let http_handle = tokio::spawn(async {
         let app = Route::new().at("/obs", get(obs)).with(Tracing);
-        Server::new(TcpListener::bind("127.0.0.1:3000"))
+        Server::new(TcpListener::bind("127.0.0.1:3001"))
         .run(app)
         .await.expect("HTTP error")
     });

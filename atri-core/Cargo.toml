@@ -1,2 +1,2 @@
 [workspace]
-members = ["core", "ext-danmuku", "ext-facelandmark", "ext-multi", "ext-tobii", "ext-trigger"]
+members = ["core", "ext-danmuku", "ext-humantracking", "ext-multi", "ext-tobii", "ext-trigger", "ext-rtmprelay"]

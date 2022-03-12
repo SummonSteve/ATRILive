@@ -227,6 +227,10 @@ name = "ext-multi"
 version = "0.1.0"
 
 [[package]]
+name = "ext-rtmprelay"
+version = "0.1.0"
+
+[[package]]
 name = "ext-tobii"
 version = "0.1.0"
 
