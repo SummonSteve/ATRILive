@@ -24,7 +24,9 @@
     "vite": "^2.8.0"
   },
   "dependencies": {
+    "pixi-live2d-display": "^0.3.1",
     "reconnecting-websocket": "^4.4.0",
-    "svelte-material-ui": "^6.0.0-beta.15"
+    "svelte-material-ui": "^6.0.0-beta.15",
+    "svelte-routing": "^1.6.0"
   }
 }

@@ -1,5 +1,9 @@
 <script lang="ts">
-  import Container from './lib/Container.svelte';
+  import { Router, Link, Route } from "svelte-routing";
+  import Designer from './lib/Designer.svelte';
+  import Canvas from './lib/Components/Canvas.svelte';
+
+  export let url = "";
 </script>
 
 <link rel="stylesheet" href="node_modules/svelte-material-ui/bare.css" />
@@ -19,7 +23,10 @@
   href="https://fonts.googleapis.com/css?family=Roboto+Mono"
 />
 
-<Container/>
+<Router url="{url}">
+  <Route path="designer" component="{Designer}" />
+  <Route path="canvas" component="{Canvas}" />
+</Router>
 
 <style>
 

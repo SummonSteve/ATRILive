@@ -35,7 +35,7 @@
 	}
 </script>
 
-<svelte:window on:wheel|preventDefault = {handleWheel}/>
+<svelte:window on:wheel = {handleWheel}/>
 
 <div class="Canvas" style="transform: scale({y}, {y});" use:handledrag>
     <h1>Canvas</h1>
