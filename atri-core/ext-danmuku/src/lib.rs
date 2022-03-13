@@ -2,6 +2,7 @@ use miniz_oxide::inflate;
 use regex::Regex;
 use tracing::{error, info};
 
+#[derive(Debug, Clone, PartialEq, Copy)]
 pub struct BiliPacket{
     packet_len: i32,
     header_len: i32,
