@@ -1,8 +1,9 @@
 mod utils;
+mod handlers;
 
 use color_eyre::eyre::Result;
 use poem::{
-    web::Html, Route, get, handler, EndpointExt, middleware::Tracing, Server, listener::TcpListener,
+    Route, get, EndpointExt, middleware::Tracing, Server, listener::TcpListener,
 };
 
 #[tokio::main]
@@ -11,14 +12,20 @@ async fn main() -> Result<()> {
     tracing_subscriber::fmt::init();
 
     let http_handle = tokio::spawn(async {
-        let app = Route::new().at("/obs", get(obs)).with(Tracing);
+        let app = Route::new()
+            .at("/obs", get(handlers::canvas::canvas_get))
+            .at("/designer", get(handlers::designer::designer_get))
+            .at("/panel", get(handlers::panel::panel_get).post(handlers::panel::panel_post))
+            .with(Tracing);
+
         Server::new(TcpListener::bind("127.0.0.1:3001"))
         .run(app)
         .await.expect("HTTP error")
     });
 
     let tcp_handle = tokio::spawn(async {
-        //todo!();
+        // 用于p2p连接 基于 quic 实现
+        // todo!();
     });
 
 
@@ -27,9 +34,4 @@ async fn main() -> Result<()> {
     http_result?;
     tcp_result?;
     Ok(())
-}
-
-#[handler]
-fn obs() -> Html<String> {
-    Html("アトリは、高性能ですから!".to_string())
 }

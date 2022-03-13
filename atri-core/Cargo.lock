@@ -215,6 +215,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "ext-apis"
+version = "0.1.0"
+
+[[package]]
 name = "ext-danmuku"
 version = "0.1.0"
 dependencies = [
@@ -234,6 +238,10 @@ version = "0.1.0"
 
 [[package]]
 name = "ext-rtmprelay"
+version = "0.1.0"
+
+[[package]]
+name = "ext-server"
 version = "0.1.0"
 
 [[package]]
