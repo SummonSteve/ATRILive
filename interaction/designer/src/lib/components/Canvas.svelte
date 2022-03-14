@@ -1,12 +1,14 @@
 <script lang="ts">
-	import {handledrag, itemList} from "../scripts/Canvas";
+	import {mouseEvent, itemList} from "../scripts/Canvas";
 	import {draggable} from "../scripts/Draggable";
+	import {resize} from "../scripts/Resizable";
 	import {Rect} from "../scripts/Components";
 
 	function get_scale(){
 		return scale;
 	}
 
+	let is_placing = false;
 	let scale = 1;
 	let lastx = 0;
 	let lasty = 0;
@@ -15,37 +17,75 @@
 	let posX = 0;
 	let posY = 0;
 	let grid_size = 0;
-	function handleWheel(e) {
-    let scale_size = (e.shiftKey ? 0.2 : 1) * e.deltaY;
-    scale -= (scale > 0.3 || scale_size < 0) ? scale_size/1500 : 0;
-    x = (-e.offsetX + 480) * scale;
-    y = (-e.offsetY + 270) * scale;
-    x = (e.shiftKey ? 0.2 : 1) * (e.deltaY > 0 ? -1 : 1) * (Math.abs(lastx - x) < 50 ? x : lastx - x > 0 ? -20 * (1/scale) : 20 * (1/scale));
-    y = (e.shiftKey ? 0.2 : 1) * (e.deltaY > 0 ? -1 : 1) * (Math.abs(lasty - y) < 50 ? y : lasty - y > 0 ? -20 * (1/scale) : 20 * (1/scale));
 
-    lastx = x;
-    lasty = y;
-    posX += x;
-    posY += y;
-	
-	grid_size = scale > 1.5 ? 20 : 0;
+	function handleWheel(e) {
+		let scale_size = (e.shiftKey ? 0.2 : 1) * e.deltaY;
+		scale -= (scale > 0.3 || scale_size < 0) ? scale_size/1500 : 0;
+		x = (-e.offsetX + 480) * scale;
+		y = (-e.offsetY + 270) * scale;
+		x = (e.shiftKey ? 0.2 : 1) * (e.deltaY > 0 ? -1 : 1) * (Math.abs(lastx - x) < 50 ? x : lastx - x > 0 ? -20 * (1/scale) : 20 * (1/scale));
+		y = (e.shiftKey ? 0.2 : 1) * (e.deltaY > 0 ? -1 : 1) * (Math.abs(lasty - y) < 50 ? y : lasty - y > 0 ? -20 * (1/scale) : 20 * (1/scale));
+
+		lastx = x;
+		lasty = y;
+		posX += x;
+		posY += y;
+		
+		grid_size = scale > 1.5 ? 20 : 0;
 
 }
 </script>
 
 <svelte:window on:wheel|preventDefault|nonpassive = {handleWheel}/>
 
-<div class="Canvas" style="transform: scale({scale}) translate({posX}px,{posY}px); background-size: {grid_size}px {grid_size}px;" use:handledrag>
+<div class="Canvas" style="transform: scale({scale}) translate({posX}px,{posY}px); background-size: {grid_size}px {grid_size}px;" use:mouseEvent={is_placing}>
     {#each $itemList as item}
-		<div class="item" use:draggable={get_scale}></div>
+		<div class="item" use:resize={get_scale} use:draggable={get_scale}></div>
 	{/each}
 </div>
 
 <style>
+	:global(.grabber) {
+		position: absolute;
+		box-sizing: border-box; 
+	}
+	
+	:global(.grabber.right) {
+		width: 0px;
+		height: 0px;
+		background: transparent;
+		right: -5px;
+	}
+	
+	:global(.grabber.left) {
+		width: 10px;
+		height: 10px;
+		background: black;
+	}
+	
+	:global(.grabber.top) {
+		height: 10px;
+		width: 10px;
+		background: transparent;
+		top: -5px;
+	}
+	
+	:global(.grabber.bottom) {
+		height: 0px;
+		width: 0px;
+		background: transparent;
+		bottom: -5px;
+	}
+	
+	:global(body) {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
 	.item {
 		height: 44px;
 		width: 95px;
-		position: relative;
+		position: absolute;
 		display: inline-block;
 		background: rgba(255, 65, 65, 0.5);
 		transform: translate(5px,5px);
@@ -63,5 +103,5 @@
 	background-image:
       repeating-linear-gradient(#ccc 0 1px, transparent 1px 100%),
       repeating-linear-gradient(90deg, #ccc 0 1px, transparent 1px 100%);
-}
+	}
 </style>

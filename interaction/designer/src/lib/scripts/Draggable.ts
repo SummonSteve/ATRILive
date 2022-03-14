@@ -2,7 +2,7 @@ import { spring } from 'svelte/motion'
 import { crossfade } from 'svelte/transition'
 import { quintOut, elasticOut } from 'svelte/easing'
 
-let useGrid = true;
+let useGrid = false;
 let canGrag = false;
 let dropTarget: Element;
 
@@ -36,6 +36,8 @@ function draggable(node, getscale) {
     node.addEventListener('mousedown', handleMousedown);
 
     function handleMousedown(event) {
+        if (event.button === 1) return; // ignore middle click which is handled by canvas
+
         if (!canGrag){
             canGrag = true;
             node.style.border = '1px solid red';

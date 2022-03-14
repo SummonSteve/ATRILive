@@ -40,7 +40,7 @@ abstract class Drawable {
     constructor(x: number, y: number){
         this.x = x;
         this.y = y;
-        this.id = "uuidv4";
+        this.id = Math.random().toString(36).substring(2, 15);
         this.name = '';
         this.parent = null;
         this.children = [];
@@ -72,10 +72,6 @@ class Rect extends Drawable {
     gen_rect_component(x: number, y: number) {
         this.style = `width: ${this.width}px; height: ${this.height}px;`;
     }
-}
-
-function uuidv4(): string {
-    throw new Error("Function not implemented.");
 }
 
 

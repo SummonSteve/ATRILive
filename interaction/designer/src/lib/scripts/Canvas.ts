@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-function handledrag(node: HTMLDivElement) {
+function mouseEvent(node: HTMLDivElement, is_placing: boolean) {
      let moving = false;
      let left = 10;
      let top = 110;
@@ -12,9 +12,15 @@ function handledrag(node: HTMLDivElement) {
      
 
      node.addEventListener('mousedown', (e) => {
-         if(e.button === 1) {
-             moving = true;
-             node.style.cursor = 'move';
+         switch (e.button) {
+                case 0:
+                    break;
+                case 1:
+                    moving = true;
+                    node.style.cursor = 'move';
+                    break;
+                case 2:
+                    break;
          }
      });
      
@@ -27,9 +33,17 @@ function handledrag(node: HTMLDivElement) {
             }
      });
     
-     window.addEventListener('mouseup', () => {
-         moving = false;
-         node.style.cursor = 'default';
+     window.addEventListener('mouseup', (e) => {
+        switch (e.button) {
+            case 0:
+                break;
+            case 1:
+                moving = false;
+                node.style.cursor = 'default';
+                break;
+            case 2:
+                break;
+     }
      });
 
 }
@@ -42,4 +56,4 @@ function addItem(item) {
     });
 }
 
-export {handledrag, addItem};
+export {mouseEvent, addItem};
