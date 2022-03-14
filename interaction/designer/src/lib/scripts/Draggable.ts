@@ -2,7 +2,7 @@ import { spring } from 'svelte/motion'
 import { crossfade } from 'svelte/transition'
 import { quintOut, elasticOut } from 'svelte/easing'
 
-let useGrid = false;
+let useGrid = true;
 let canGrag = false;
 let dropTarget: Element;
 
@@ -10,8 +10,8 @@ function toogleGrid() {
     useGrid = !useGrid;
 }
 
-function draggable(node) {
-
+function draggable(node, getscale) {
+    let scale: number;
     let lastX: number;
     let lastY: number;
     let startRect: any;
@@ -59,8 +59,10 @@ function draggable(node) {
         const dx = event.clientX - lastX;
         const dy = event.clientY - lastY;
 
-        offsetX += dx
-        offsetY += dy
+        scale = getscale();
+
+        offsetX += dx / scale;
+        offsetY += dy / scale;
         lastX = event.clientX;
         lastY = event.clientY;
         const rect = node.getBoundingClientRect();

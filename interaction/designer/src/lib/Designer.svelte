@@ -5,12 +5,6 @@
     import {draggable} from "./scripts/Draggable";
 </script>
 
-<Appbar/>
-
 <Canvas/>
 
-
-
-<style>
-  
-</style>
+<Appbar/>

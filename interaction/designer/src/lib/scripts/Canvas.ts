@@ -1,3 +1,4 @@
+import { writable } from 'svelte/store';
 
 function handledrag(node: HTMLDivElement) {
      let moving = false;
@@ -33,10 +34,12 @@ function handledrag(node: HTMLDivElement) {
 
 }
 
-let itemList = ["test"];
+export const itemList = writable(['test']);
 
 function addItem(item) {
-    itemList.push(item);
+    itemList.update((items) => {
+        return [...items, item];
+    });
 }
 
-export {handledrag, addItem, itemList};
+export {handledrag, addItem};
