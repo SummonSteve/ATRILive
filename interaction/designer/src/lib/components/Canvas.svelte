@@ -31,7 +31,7 @@
 		posX += x;
 		posY += y;
 		
-		grid_size = scale > 1.5 ? 20 : 0;
+		grid_size = scale > 1.3 ? 20 : 0;
 
 }
 </script>
@@ -40,43 +40,13 @@
 
 <div class="Canvas" style="transform: scale({scale}) translate({posX}px,{posY}px); background-size: {grid_size}px {grid_size}px;" use:mouseEvent={is_placing}>
     {#each $itemList as item}
-		<div id="{item.id}" style="{item.style}}" use:resize={get_scale} use:draggable={get_scale} use:select></div>
+		<div id="{item.id}-handle" style="transform: translate({item.x}px,{item.y}px); width: {item.width + 4}px; height: {item.height + 4}px; position: absolute;" use:resize={get_scale} use:select>
+			<div id="{item.id}" style="{item.style}}" use:draggable={get_scale}></div>
+		</div>
 	{/each}
 </div>
 
 <style>
-	:global(.grabber) {
-		position: absolute;
-		box-sizing: border-box; 
-	}
-	
-	:global(.grabber.right) {
-		width: 0px;
-		height: 0px;
-		background: transparent;
-		right: -3px;
-	}
-	
-	:global(.grabber.left) {
-		width: 1px;
-		height: 1px;
-		background: black;
-	}
-	
-	:global(.grabber.top) {
-		height: 1px;
-		width: 1px;
-		background: transparent;
-		top: -3px;
-	}
-	
-	:global(.grabber.bottom) {
-		height: 0px;
-		width: 0px;
-		background: transparent;
-		bottom: -3px;
-	}
-	
     .Canvas {
 	width: 960px;
     height: 540px;
@@ -88,5 +58,23 @@
 	background-image:
       repeating-linear-gradient(#ccc 0 1px, transparent 1px 100%),
       repeating-linear-gradient(90deg, #ccc 0 1px, transparent 1px 100%);
+	}
+	:global(.grabber) {
+		position: absolute;
+		box-sizing: border-box; 
+	}
+	:global(.grabber.bottom-right) {
+		height: 8px;
+		width: 8px;
+		background: black;
+		bottom: -2px;
+		right: -2px;
+		cursor: se-resize;
+		border-radius: 100%;
+	}
+	
+	
+	:global(.grabber.selected) {
+		border: solid 1px black;
 	}
 </style>

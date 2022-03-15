@@ -6,10 +6,11 @@ function select(node: HTMLDivElement) {
     node.addEventListener('mousedown', handleMousedown);
     function handleMousedown(event) {
         if (selectedNodeId)
-            document.getElementById(selectedNodeId).style.border = '';
+            document.getElementById(selectedNodeId).style.backgroundColor = "rgba(0, 0, 0, 0)";
         
         selectedNodeId = node.id;
-        node.style.border = '3px solid red';
+
+        node.style.backgroundColor = "rgba(0, 0, 0, 0.2)";
     }
 
     return {

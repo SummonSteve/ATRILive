@@ -5,11 +5,14 @@ enum ComponentType{
     Ellipse,
     Image,
     Text,
+    CubismLive2d,
 }
 
 abstract class Drawable {
     public x: number;
     public y: number;
+    public width: number;
+    public height: number;
     public id: string;
     public name: string;
     public parent: Drawable;
@@ -62,13 +65,12 @@ abstract class Drawable {
 }
 
 class Rect extends Drawable {
-    public width: number;
-    public height: number;
+    
     constructor(x: number, y: number, h: number, w: number) {
         super(x, y);
         this.width = w;
         this.height = h;
-        this.style = `width: ${this.width}px; height: ${this.height}px; position: absolute; display: inline-block; background: rgba(255, 65, 65, 0.5); border: 1px solid transparent;`;
+        this.style = `transform: translate(2px,2px); width: ${this.width}px; height: ${this.height}px; position: absolute; display: inline-block; background: rgba(255, 65, 65, 0.5);`;
     }
 }
 

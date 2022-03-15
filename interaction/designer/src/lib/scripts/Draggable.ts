@@ -10,6 +10,9 @@ function toogleGrid() {
 }
 
 function draggable(node, getscale) {
+    let id = node.id;
+    let parentNode = document.getElementById(`${id}-handle`);
+    console.log(`${id}-handle`);
     let scale: number;
     let lastX: number;
     let lastY: number;
@@ -23,11 +26,15 @@ function draggable(node, getscale) {
 
     offset.subscribe(offset => {
         if (useGrid) {
-            node.style.left = offset.x % 20 == 0 ? offset.x : offset.x - offset.x % 20 + 'px';
-            node.style.top = offset.y % 20 == 0 ? offset.y : offset.y - offset.y % 20 + 'px';
+            let _left = offset.x % 20 == 0 ? offset.x : offset.x - offset.x % 20 + 'px';
+            let _top = offset.y % 20 == 0 ? offset.y : offset.y - offset.y % 20 + 'px';
+            parentNode.style.left = _left.toString();
+            parentNode.style.top = _top.toString();
         } else {
-            node.style.left = offset.x + 'px';
-            node.style.top = offset.y + 'px';
+            let _left = offset.x + 'px';
+            let _top = offset.y + 'px';
+            parentNode.style.left = _left.toString();
+            parentNode.style.top = _top.toString();
         }
 
     })
