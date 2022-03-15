@@ -1,9 +1,11 @@
+
+
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
 export enum Signal {
-    chat_msg,
-    chat_gift,
-    chat_visitor,
+    CHAT_MSG,
+    CHAT_GIFT,
+    CHAT_VISTOR,
   }
 
 function connect(url: string){
@@ -16,13 +18,13 @@ function connect(url: string){
     rws.addEventListener('message', (e) => {
         const data = JSON.parse(e.data);
         switch(data.type){
-            case Signal.chat_msg:
+            case Signal.CHAT_MSG:
                 console.log('chat_msg');
                 break;
-            case Signal.chat_gift:
+            case Signal.CHAT_GIFT:
                 console.log('chat_gift');
                 break;
-            case Signal.chat_visitor:
+            case Signal.CHAT_VISTOR:
                 console.log('chat_visitor');
                 break;
         }

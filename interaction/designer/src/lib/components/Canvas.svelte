@@ -2,7 +2,7 @@
 	import {mouseEvent, itemList} from "../scripts/Canvas";
 	import {draggable} from "../scripts/Draggable";
 	import {resize} from "../scripts/Resizable";
-	import {Rect} from "../scripts/Components";
+	import {select} from "../scripts/Selectable";
 
 	function get_scale(){
 		return scale;
@@ -40,7 +40,7 @@
 
 <div class="Canvas" style="transform: scale({scale}) translate({posX}px,{posY}px); background-size: {grid_size}px {grid_size}px;" use:mouseEvent={is_placing}>
     {#each $itemList as item}
-		<div class="item" use:resize={get_scale} use:draggable={get_scale}></div>
+		<div id="{item.id}" style="{item.style}}" use:resize={get_scale} use:draggable={get_scale} use:select></div>
 	{/each}
 </div>
 
@@ -54,44 +54,29 @@
 		width: 0px;
 		height: 0px;
 		background: transparent;
-		right: -5px;
+		right: -3px;
 	}
 	
 	:global(.grabber.left) {
-		width: 10px;
-		height: 10px;
+		width: 1px;
+		height: 1px;
 		background: black;
 	}
 	
 	:global(.grabber.top) {
-		height: 10px;
-		width: 10px;
+		height: 1px;
+		width: 1px;
 		background: transparent;
-		top: -5px;
+		top: -3px;
 	}
 	
 	:global(.grabber.bottom) {
 		height: 0px;
 		width: 0px;
 		background: transparent;
-		bottom: -5px;
+		bottom: -3px;
 	}
 	
-	:global(body) {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-	}
-	.item {
-		height: 44px;
-		width: 95px;
-		position: absolute;
-		display: inline-block;
-		background: rgba(255, 65, 65, 0.5);
-		transform: translate(5px,5px);
-
-		box-shadow: 4px 4px 4px rgba(0,0,0,0.2);
-	}
     .Canvas {
 	width: 960px;
     height: 540px;

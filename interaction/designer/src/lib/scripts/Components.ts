@@ -26,6 +26,7 @@ abstract class Drawable {
     public isVisible: boolean;
     public isLocked: boolean;
     public shadow: boolean;
+    public animatorQueue: Animation[];
 
     public get use_shadow() : boolean {
         return this.shadow;
@@ -33,7 +34,7 @@ abstract class Drawable {
 
     public set use_shadow(value: boolean){
         this.shadow = value;
-        throw new Error("Not implemented.");
+        this.style += "box-shadow: 4px 4px 4px rgba(0,0,0,0.2);";
     }
     
 
@@ -67,10 +68,7 @@ class Rect extends Drawable {
         super(x, y);
         this.width = w;
         this.height = h;
-    }
-
-    gen_rect_component(x: number, y: number) {
-        this.style = `width: ${this.width}px; height: ${this.height}px;`;
+        this.style = `width: ${this.width}px; height: ${this.height}px; position: absolute; display: inline-block; background: rgba(255, 65, 65, 0.5); border: 1px solid transparent;`;
     }
 }
 

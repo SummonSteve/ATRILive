@@ -3,7 +3,6 @@ import { crossfade } from 'svelte/transition'
 import { quintOut, elasticOut } from 'svelte/easing'
 
 let useGrid = false;
-let canGrag = false;
 let dropTarget: Element;
 
 function toogleGrid() {
@@ -37,12 +36,6 @@ function draggable(node, getscale) {
 
     function handleMousedown(event) {
         if (event.button === 1) return; // ignore middle click which is handled by canvas
-
-        if (!canGrag){
-            canGrag = true;
-            node.style.border = '1px solid red';
-            return;
-        }
         event.preventDefault()
         lastX = event.clientX;
         lastY = event.clientY;

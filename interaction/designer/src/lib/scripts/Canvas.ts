@@ -48,11 +48,17 @@ function mouseEvent(node: HTMLDivElement, is_placing: boolean) {
 
 }
 
-export const itemList = writable(['test']);
+export const itemList = writable([]);
 
 function addItem(item) {
     itemList.update((items) => {
         return [...items, item];
+    });
+}
+
+function remove_item(id) {
+    itemList.update((items) => {
+        return items.filter((item) => item.id !== id);
     });
 }
 

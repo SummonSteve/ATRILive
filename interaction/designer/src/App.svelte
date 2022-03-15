@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Router, Link, Route } from "svelte-routing";
   import Designer from './lib/Designer.svelte';
-  //import Canvas from './lib/Components/Canvas.svelte';
+  import Canvas from './lib/Components/Canvas.svelte';
 
   export let url = "";
 </script>
@@ -25,7 +25,7 @@
 
 <Router url="{url}">
   <Route path="designer" component="{Designer}" />
-
+  <Route path="canvas" component="{Canvas}" />
 </Router>
 
 <style>
