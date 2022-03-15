@@ -7,7 +7,6 @@
 
     function add_rect() {
         let rect1 = new Rect(0, 0, 100, 100);
-        console.log(rect1);
         addItem(rect1);
     }
 

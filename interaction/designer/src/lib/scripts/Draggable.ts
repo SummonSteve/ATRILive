@@ -12,7 +12,6 @@ function toogleGrid() {
 function draggable(node, getscale) {
     let id = node.id;
     let parentNode = document.getElementById(`${id}-handle`);
-    console.log(`${id}-handle`);
     let scale: number;
     let lastX: number;
     let lastY: number;

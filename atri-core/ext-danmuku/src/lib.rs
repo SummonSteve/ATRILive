@@ -1,109 +1,171 @@
-use miniz_oxide::inflate;
-use regex::Regex;
+use serde_json::Value;
+use std::time::Duration;
+use tokio::time;
+use tokio::sync::mpsc::{Receiver, Sender};
+use tokio_tungstenite::{connect_async, tungstenite::protocol::Message};
 use tracing::{error, info};
+use url::Url;
+use color_eyre::eyre::Result;
+use futures_util::{StreamExt, SinkExt};
 
-#[derive(Debug, Clone, PartialEq)]
-pub struct BiliPacket{
-    packet_len: i32,
-    header_len: i32,
-    version: i32,
-    pub op: i32,
-    seq: i32,
-    pub body: Vec<Option<String>>,
+mod bili;
+
+#[derive(Debug)]
+enum EventType {
+    ChatMessage,
+    NewVisitor,
+    Popularity,
 }
 
+#[derive(Debug)]
+pub struct DanmukuEvent {
+    event_type: EventType,
+    user: String,
+    operation: Option<String>,
+}
 
-
-pub fn read_int(buffer: &Vec<u8>, start: i32, len: i32) -> i32 {
-    let mut i = len - 1;
-    let mut result = 0;
-    while i >= 0 {
-        result += 256i32.pow((len - i - 1) as u32) * buffer[(start + i) as usize] as i32;
-        i -= 1;
+impl DanmukuEvent {
+    fn err() -> DanmukuEvent{
+        DanmukuEvent {
+            event_type: EventType::ChatMessage,
+            user: "Err".to_string(),
+            operation: None,
+        }
     }
-    result
-}
 
-pub fn write_int(mut buffer: Vec<u8>, start: i32, len: i32, value: i32) -> Vec<u8> {
-    let mut i = 0;
-    while i < len {
-        buffer[(start + i) as usize] = (value / 256i32.pow((len - i - 1) as u32) as i32) as u8;
-        i += 1;
+    fn default() -> DanmukuEvent {
+        DanmukuEvent {
+            event_type: EventType::ChatMessage,
+            user: "".to_string(),
+            operation: None,
+        }
     }
-    buffer
+
+    fn login() -> DanmukuEvent {
+        DanmukuEvent {
+            event_type: EventType::ChatMessage,
+            user: "".to_string(),
+            operation: None,
+        }
+    }
+
+    fn popularity(value: String) -> DanmukuEvent {
+        DanmukuEvent {
+            event_type: EventType::ChatMessage,
+            user: "".to_string(),
+            operation: Some(value),
+        }
+    }
+
+    fn new(event_type: EventType, user: String, operation: Option<String>) -> DanmukuEvent {
+        DanmukuEvent {
+            event_type,
+            user,
+            operation,
+        }
+    }
 }
 
-pub fn encode(raw_str: &str, op: i32) -> Vec<u8> {
-    let data = raw_str.as_bytes();
-    let packet_len = data.len() as i32 + 16;
-    let header= [0, 0, 0, 0, 0, 16, 0, 1, 0, 0, 0, op as u8, 0, 0, 0, 1];
-    let mut packet = write_int(header.to_vec(), 0, 4, packet_len);
-    packet.extend(data);
-    packet
-}
+pub async fn start(room_id: &str, tx: Sender<DanmukuEvent>) -> Result<()> {
+    let url = Url::parse("wss://broadcastlv.chat.bilibili.com/sub").unwrap();
+    let (ws_stream, response) = connect_async(url).await.expect("Failed to connect");
+    let (mut write, mut read) = ws_stream.split();
 
-pub fn decode(buffer: Vec<u8>) -> BiliPacket {
-    let mut result = BiliPacket {
-        packet_len: read_int(&buffer, 0, 4),
-        header_len: read_int(&buffer, 4, 2),
-        version: read_int(&buffer, 6, 2),
-        op: read_int(&buffer, 8, 4),
-        seq: read_int(&buffer, 12, 4),
-        body: Vec::new(),
-    };
-    match result.op {
-        5 => {
-            let mut offset: i32 = 0;
-            while offset < buffer.len() as i32 {
-                let packet_len = read_int(&buffer, offset, 4);
-                let header_len = 16;
-                let _start = offset + header_len;
-                let _end = offset + packet_len;
-                let data = &buffer[_start as usize.._end as usize];
-                let decoded = inflate::decompress_to_vec_zlib(&data);
-                match decoded {
-                    Ok(decoded) => {
-                        let decoded_str = String::from_utf8_lossy(&decoded);
-                        let seperator = Regex::new(r"[\x00-\x1f]+").expect("Invalid regex");
-                        for item in reg_split(&seperator, &decoded_str) {
-                            if item.contains("{"){
-                                result.body.push(Some(item.to_string()));
-                            }
+    info!("Status code: {}", response.status());
+    for (ref header, _value) in response.headers() {
+        info!("{}: {:?}", header, _value);
+    }
+
+    let handshake_packet = bili::encode("{\"roomid\": 3470615}", 7);
+    let mut interval = time::interval(Duration::from_secs(30));
+
+    write.send(Message::Binary(handshake_packet)).await.unwrap();
+
+    loop {
+        tokio::select! {
+            msg = read.next() => {
+                match msg {
+                    Some(msg) => {
+                        let data = msg.unwrap().into_data();
+                        if data.len() > 0 {
+                            tx.send(handle_packet(data).await).await;
                         }
                     }
-                    Err(_) => {
-                        error!("decode error");
-                    }
+                    None => break,
                 }
-                offset += packet_len;
             }
-        },
-        3 => {
-            let count = read_int(&buffer, 16, 4);
-            let fragment = "{\"count\": ".to_string() + &count.to_string() + "}";
-            result.body.push(Some(fragment));
-
-        },
-
-        _ => {
-            //
-        },
+            _ = interval.tick() => {
+                write.send(Message::Binary(bili::encode("", 2))).await.unwrap();
+            }
+        }
     }
-    result
+    Ok(())
 }
 
-fn reg_split<'a>(r: &Regex, text: &'a str) -> Vec<&'a str> {
-    let mut result = Vec::new();
-    let mut last = 0;
-    for (index, matched) in text.match_indices(r) {
-        if last != index {
-            result.push(&text[last..index]);
+async fn handle_packet(data: Vec<u8>) -> DanmukuEvent {
+    let packet = bili::decode(data);
+    match packet.op {
+        8 => {
+            info!("加入房间");
+            DanmukuEvent::login()
         }
-        result.push(matched);
-        last = index + matched.len();
+
+        5 => {
+            let mut event = DanmukuEvent::default();
+            for body in packet.body {
+                match serde_json::from_str(&body.unwrap()) {
+                    Ok::<Value, _>(data) => {
+                        match data["cmd"].as_str() {
+                            Some(cmd) => match cmd {
+                                "DANMU_MSG" => {
+                                    event = DanmukuEvent::new(
+                                        EventType::ChatMessage,
+                                        data["info"][2][1].to_string(),
+                                        Some(data["info"][1].to_string()),
+                                    );
+                                    println!("{:?}", event);
+                                }
+                                //"SEND_GIFT" => {
+                                //    info!(
+                                //        "{}{}{}个{}",
+                                //        data["data"]["uname"],
+                                //        data["data"]["action"],
+                                //        data["data"]["num"],
+                                //        data["data"]["giftName"]
+                                //    )
+                                //}
+
+                                "INTERACT_WORD" => {
+                                    
+                                    event = DanmukuEvent::new(
+                                        EventType::NewVisitor,
+                                        data["info"][2][1].to_string(),
+                                        None,
+                                    );
+                                }
+                                _ => {
+                                    event = DanmukuEvent::default();
+                                }
+                            },
+                            None => {
+                                DanmukuEvent::err();
+                            }
+                        };
+                    }
+                    Err(e) => {
+                        error!("json解析错误 {}", e);
+                        event = DanmukuEvent::err();
+                    }
+                };
+            }
+            event
+        }
+
+        3 => {
+            let data: Value = serde_json::from_str(&packet.body[0].as_ref().unwrap()).unwrap();
+            DanmukuEvent::popularity(data["count"].to_string())
+        }
+
+        _ => DanmukuEvent::default()
     }
-    if last < text.len() {
-        result.push(&text[last..]);
-    }
-    result
 }

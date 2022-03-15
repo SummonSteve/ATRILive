@@ -168,6 +168,7 @@ name = "core"
 version = "0.1.0"
 dependencies = [
  "color-eyre",
+ "ext-danmuku",
  "poem",
  "tokio",
  "tokio-tungstenite",
@@ -241,10 +242,16 @@ dependencies = [
 name = "ext-danmuku"
 version = "0.1.0"
 dependencies = [
+ "color-eyre",
+ "futures-util",
  "miniz_oxide 0.5.1",
  "regex",
+ "serde_json",
+ "tokio",
+ "tokio-tungstenite",
  "tracing",
  "tracing-subscriber",
+ "url",
 ]
 
 [[package]]

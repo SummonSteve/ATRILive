@@ -15,9 +15,7 @@ function resize(node, getScale) {
         active = event.target
         const rect = node.getBoundingClientRect()
         const parent = node.parentElement.getBoundingClientRect()
-        
-        console.log({rect, parent})
-        
+
         initialRect = {
             width: rect.width,
             height: rect.height,
@@ -36,7 +34,6 @@ function resize(node, getScale) {
         let childNode = document.getElementById(node.id.split('-')[0]);
 
         if (childNode) {
-            console.log(node.style.width);
             childNode.style.width = Number(node.style.width.split('px')[0]) - 4 + 'px';
             childNode.style.height = Number(node.style.height.split('px')[0]) - 4 + 'px';
             childNode.style.width = Number(node.style.width.split('px')[0]) - 4 + 'px';

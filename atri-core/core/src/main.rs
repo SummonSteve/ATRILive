@@ -18,7 +18,7 @@ async fn main() -> Result<()> {
             .at("/panel", get(handlers::panel::panel_get).post(handlers::panel::panel_post))
             .with(Tracing);
 
-        Server::new(TcpListener::bind("127.0.0.1:3001"))
+        Server::new(TcpListener::bind("127.0.0.1:3002"))
         .run(app)
         .await.expect("HTTP error")
     });
@@ -26,6 +26,10 @@ async fn main() -> Result<()> {
     let tcp_handle = tokio::spawn(async {
         // 用于p2p连接 基于 quic 实现
         // todo!();
+    });
+
+    let event_handle = tokio::spawn(async {
+        utils::event::event_receiver().await;
     });
 
 
