@@ -1,3 +1,5 @@
+import {itemList} from './Canvas';
+
 function resize(node, getScale) {
 
     const bottomRight = document.createElement('div')
@@ -40,6 +42,17 @@ function resize(node, getScale) {
             childNode.style.height = Number(node.style.height.split('px')[0]) - 4 + 'px';
 
         }
+
+        itemList.update((items) => {
+            return items.map((item) => {
+                if (item.id === node.id.split('-')[0]) {
+                    item.width = Number(node.style.width.split('px')[0]) - 4;
+                    item.height = Number(node.style.height.split('px')[0]) - 4;
+                    console.log(item.width, item.height)
+                }
+                return item;
+            });
+        });
 
         active.classList.remove('selected')
         active = null

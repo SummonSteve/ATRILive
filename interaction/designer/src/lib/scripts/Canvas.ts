@@ -16,6 +16,7 @@ function mouseEvent(node: HTMLDivElement, is_placing: boolean) {
                 case 0:
                     break;
                 case 1:
+                    e.preventDefault();
                     moving = true;
                     node.style.cursor = 'move';
                     break;

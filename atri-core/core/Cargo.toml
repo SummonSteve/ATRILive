@@ -6,6 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
 ext-danmuku = { path = "../ext-danmuku" }
 poem = { version = "1.3.14", features = ["eyre06", "static-files"] }
 color-eyre = "0.6"

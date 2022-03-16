@@ -169,6 +169,7 @@ version = "0.1.0"
 dependencies = [
  "color-eyre",
  "ext-danmuku",
+ "futures-util",
  "poem",
  "tokio",
  "tokio-tungstenite",

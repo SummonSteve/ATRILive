@@ -32,6 +32,10 @@ async fn main() -> Result<()> {
         utils::event::event_receiver().await;
     });
 
+    let signal_handle = tokio::spawn(async {
+        
+    });
+
 
     let (http_result, tcp_result) = tokio::join!(http_handle, tcp_handle);
 

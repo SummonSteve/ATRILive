@@ -1,7 +1,16 @@
 <script lang="ts">
+    let project_name = "Hello AtriLive";
+
+    import TopAppBar, { Row, Section, Title } from '@smui/top-app-bar';
+    import Select, { Option } from '@smui/select';
+    import Icon from '@smui/select/icon';
+    import IconButton from '@smui/icon-button';
+    import Checkbox from '@smui/checkbox';
     import {Rect} from "../scripts/Components";
     import {draggable, toogleGrid} from "../scripts/Draggable";
     import {itemList, addItem} from "../scripts/Canvas";
+
+    let ComponentsAvailable = ['Rect', 'Text', 'Ellipse', 'Line', 'Image'];
 
     let grid: boolean = false;
 
@@ -17,20 +26,24 @@
 </script>
 
 <div class="Appbar">
-    <h1>Components</h1>
+    <TopAppBar variant="static">
+        <Row>
+            <Section align="end">
+                <Title>{project_name}</Title>
+            </Section>
+            <Section>
+                <Select label="Add Component" variant="filled">
+                    {#each ComponentsAvailable as item}
+                      <Option value={item} on:click={add_rect}>{item}</Option>
+                    {/each}
+                </Select>
+            </Section>
+        </Row>
 
-    <button on:click={add_rect}>
-        add Rect
-    </button>
-    <button on:click={use_grid}>
-        {grid ? "Disable Grid" : "Enable Grid"}
-    </button>
+
+    </TopAppBar>
 </div>
 
 <style>
-    .Appbar{
-        border: 1px solid red;
-        padding: 5px;
-    }
 </style>
 

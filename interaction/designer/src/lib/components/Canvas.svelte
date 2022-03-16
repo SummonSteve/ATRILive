@@ -38,10 +38,10 @@
 
 <svelte:window on:wheel|preventDefault|nonpassive = {handleWheel}/>
 
-<div class="Canvas" style="transform: scale({scale}) translate({posX}px,{posY}px); background-size: {grid_size}px {grid_size}px;" use:mouseEvent={is_placing}>
+<div class="Canvas" use:mouseEvent={is_placing} style="transform: scale({scale}) translate({posX}px,{posY}px); background-size: {grid_size}px {grid_size}px;">
     {#each $itemList as item}
-		<div id="{item.id}-handle" style="transform: translate({item.x}px,{item.y}px); width: {item.width + 4}px; height: {item.height + 4}px; position: absolute;" use:resize={get_scale} use:select>
-			<div id="{item.id}" style="{item.style}}" use:draggable={get_scale}></div>
+		<div id="{item.id}-handle" use:resize={get_scale} use:select style="transform: translate({item.x}px,{item.y}px); width: {item.width + 4}px; height: {item.height + 4}px; position: absolute;">
+			<div id="{item.id}" use:draggable={get_scale} style="{item.style}}"></div>
 		</div>
 	{/each}
 </div>
@@ -52,7 +52,7 @@
     height: 540px;
     
     float: left;
-    padding: 15px;
+    padding: 47px;
     border: 1px solid red;
 
 	background-image:
