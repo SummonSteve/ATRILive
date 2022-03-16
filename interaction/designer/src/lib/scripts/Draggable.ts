@@ -1,12 +1,27 @@
 import { spring } from 'svelte/motion'
-import { crossfade } from 'svelte/transition'
-import { quintOut, elasticOut } from 'svelte/easing'
 
 let useGrid = false;
+let useBoarder = true;
 let dropTarget: Element;
 
-function toogleGrid() {
+function toggleGrid() {
+    let node = document.getElementById('root');
+    if (useGrid) {
+        node.style.backgroundImage = "none";
+    } else {
+        node.style.backgroundImage = "repeating-linear-gradient(#ccc 0 1px, transparent 1px 100%), repeating-linear-gradient(90deg, #ccc 0 1px, transparent 1px 100%)";
+    }
     useGrid = !useGrid;
+}
+
+function toggleBoarder() {
+    let node = document.getElementById('root');
+    if (useBoarder) {
+        node.style.border = "none";
+    } else {
+        node.style.border = "1px dashed rgb(0, 0, 0)";
+    }
+    useBoarder = !useBoarder;
 }
 
 function draggable(node, getscale) {
@@ -112,4 +127,4 @@ function draggable(node, getscale) {
     }
 }
 
-export {draggable, toogleGrid};
+export {draggable, toggleGrid, toggleBoarder};
