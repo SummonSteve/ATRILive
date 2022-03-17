@@ -70,7 +70,6 @@ class Rect extends Drawable {
 
     constructor(x: number, y: number, h: number, w: number) {
         super(x, y);
-        this.id += '-rect';
         this.width = w;
         this.height = h;
         this.style = `transform: translate(2px,2px); width: ${this.width}px; height: ${this.height}px; position: absolute; display: inline-block; background: rgba(255, 65, 65, 0.5);`;

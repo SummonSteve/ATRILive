@@ -4,7 +4,7 @@ let useGrid = false;
 let useBoarder = true;
 let dropTarget: Element;
 
-function toggleGrid() {
+function toggleCanvasGrid() {
     let node = document.getElementById('root');
     if (useGrid) {
         node.style.backgroundImage = "none";
@@ -31,8 +31,8 @@ function draggable(node, getscale) {
     let lastX: number;
     let lastY: number;
     let startRect: any;
-    let offsetX = 0
-    let offsetY = 0
+    let offsetX = 0;
+    let offsetY = 0;
     const offset = spring({ x: offsetX, y: offsetY }, {
         stiffness: 1,
         damping: 1,
@@ -127,4 +127,4 @@ function draggable(node, getscale) {
     }
 }
 
-export {draggable, toggleGrid, toggleBoarder};
+export {draggable, toggleCanvasGrid, toggleBoarder};

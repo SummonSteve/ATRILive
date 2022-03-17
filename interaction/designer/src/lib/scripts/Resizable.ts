@@ -1,18 +1,23 @@
-import {itemList} from './Canvas';
+import { itemList } from './Canvas';
+
+let useGrid = false;
+
+function toggleDragGrid() {
+    useGrid = !useGrid;
+}
 
 function resize(node, getScale) {
 
     const bottomRight = document.createElement('div')
     bottomRight.classList.add('grabber')
     bottomRight.classList.add('bottom-right')
-            
+
     let active = null, initialRect = null, initialPos = null
-    
 
     node.appendChild(bottomRight)
     bottomRight.addEventListener('mousedown', onMousedown)
 
-    
+
     function onMousedown(event) {
         active = event.target
         const rect = node.getBoundingClientRect()
@@ -29,7 +34,7 @@ function resize(node, getScale) {
         initialPos = { x: event.pageX, y: event.pageY }
         active.classList.add('selected')
     }
-    
+
     function onMouseup(event) {
         if (!active) return
 
@@ -59,22 +64,31 @@ function resize(node, getScale) {
         initialRect = null
         initialPos = null
     }
-    
+
     function onMove(event) {
         if (!active) return
 
-        let scale = getScale();
-        let delta;
-        delta = (event.pageX - initialPos.x) / scale;
-        node.style.width = `${initialRect.width / scale + delta}px`;
-        delta = (event.pageY - initialPos.y) / scale;
-        node.style.height = `${initialRect.height / scale + delta}px`;		
+        let scale = getScale()
+
+        let deltaX: number;
+        let deltaY: number;
+
+        deltaX = (event.pageX - initialPos.x) / scale;
+        deltaY = (event.pageY - initialPos.y) / scale;
+
+        if (useGrid) {
+            deltaX = deltaX % 20 == 0 ? deltaX : deltaX - deltaX % 20;
+            deltaY = deltaY % 20 == 0 ? deltaY : deltaY - deltaY % 20;
+        }
+
+        node.style.width = `${initialRect.width / scale + deltaX}px`;
+        node.style.height = `${initialRect.height / scale + deltaY}px`;
 
     }
-    
-    window.addEventListener('mousemove', onMove)	
-    window.addEventListener('mouseup', onMouseup)	
-    
+
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onMouseup)
+
     return {
         destroy() {
             window.removeEventListener('mousemove', onMove)
@@ -83,4 +97,4 @@ function resize(node, getScale) {
         }
     }
 }
-export {resize};
+export { resize, toggleDragGrid };

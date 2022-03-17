@@ -6,14 +6,15 @@ export const Properties = writable([]);
 let selected_node = "";
 
 function show_properties(node_id: string) {
-    let componentType = node_id.split('-')[1];
-    switch (componentType) {
-        case 'rect':
-            Properties.set([
-                {name: 'rect', value: 'rect'},
-            ]);
-            break;
-    }
+    Properties.set([
+        {name: 'rect', value: 'rect'},
+        {name: 'rect', value: 'rect'},
+        {name: 'rect', value: 'rect'},
+        {name: 'rect', value: 'rect'},
+        {name: 'rect', value: 'rect'},
+        {name: 'rect', value: 'rect'},
+        {name: 'rect', value: 'rect'},
+    ]); //todo get properties from node
     isShowProperties.set(true);
     selected_node = node_id;
 }

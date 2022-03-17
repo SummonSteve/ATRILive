@@ -6,16 +6,33 @@
     import IconButton, { Icon } from "@smui/icon-button";
     import Checkbox from "@smui/checkbox";
     import { Rect } from "../scripts/Components";
-    import { draggable, toggleGrid, toggleBoarder } from "../scripts/Draggable";
+    import {
+        draggable,
+        toggleCanvasGrid,
+        toggleBoarder,
+    } from "../scripts/Draggable";
+    import { toggleDragGrid } from "../scripts/Resizable";
     import { itemList, addItem } from "../scripts/Canvas";
     import Drawer, { AppContent, Content } from "@smui/drawer";
     import { fade, fly } from "svelte/transition";
     import Properties from "../components/Properties.svelte";
+    import List, {
+        Item,
+        Text,
+        Graphic,
+        Separator,
+        Subheader,
+    } from "@smui/list";
 
     let dawerOpen = true;
     let settingsOpen = true;
     let gridOpen = true;
     let boarderOpen = true;
+
+    function toggleGrid() {
+        toggleCanvasGrid();
+        toggleDragGrid();
+    }
 
     function toggleSettings() {
         settingsOpen = !settingsOpen;
@@ -88,32 +105,19 @@
 </div>
 
 <div class="drawer-container">
-    <Drawer
-        style="background-color: rgba(0, 0, 0, 0.1)"
-        variant="dismissible"
-        bind:open={dawerOpen}
-    >
+    <Drawer variant="dismissible" bind:open={dawerOpen}>
         <Select label="Add Component" variant="filled">
             {#each ComponentsAvailable as { item, f }}
                 <Option value={item} on:click={f}>{item}</Option>
             {/each}
         </Select>
+        <Separator />
         <Properties />
     </Drawer>
 </div>
 
 <style>
     .drawer-container {
-        position: absolute;
-        height: 700px;
-        width: 200px;
-        top: 75px;
-        left: 8px;
-        right: 0;
-        bottom: 0;
-    }
-
-    .Appbar {
-        background-color: var(--mdc-theme-background, #fff);
+        display: flex;
     }
 </style>

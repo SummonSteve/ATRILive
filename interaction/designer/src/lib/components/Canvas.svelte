@@ -18,7 +18,11 @@
 	let posY = 0;
 	let grid_size = 0;
 
-	function handleWheel(e) {
+	function handleWheel(e: WheelEvent) {
+		let target = e.target as HTMLElement;
+		if (target.id != "root")
+			return;
+		e.preventDefault();
 		let scale_size = (e.shiftKey ? 0.2 : 1) * e.deltaY;
 		scale -= scale > 0.3 || scale_size < 0 ? scale_size / 1500 : 0;
 		x = (-e.offsetX + 480) * scale;
@@ -49,7 +53,7 @@
 	}
 </script>
 
-<svelte:window on:wheel|preventDefault|nonpassive={handleWheel} />
+<svelte:window on:wheel|nonpassive={handleWheel} />
 
 <div
 	id="root"

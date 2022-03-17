@@ -1,12 +1,28 @@
 <script lang="ts">
     import { fade, slide } from "svelte/transition";
-    import { isShowProperties, Properties, update_node} from "../scripts/Properties";
+    import {
+        isShowProperties,
+        Properties,
+        update_node,
+    } from "../scripts/Properties";
     import Textfield from "@smui/textfield";
+    import { spring } from "svelte/motion";
 
+    import List, {
+        Item,
+        Text,
+        Graphic,
+        Separator,
+        Subheader,
+    } from "@smui/list";
+
+    import { Content } from "@smui/drawer";
+
+    let propertiesOffsetY = 0;
     let showProperties = false;
     let properties = [];
 
-    let value = '';
+    let value = "";
 
     isShowProperties.subscribe((value) => {
         showProperties = value;
@@ -17,37 +33,32 @@
     });
 
     function handleKeyDown(event: CustomEvent | KeyboardEvent) {
-    event = event as KeyboardEvent;
-    if (event.key === 'Enter') {
-      update_node([]); //todo 此处应该更新节点
+        event = event as KeyboardEvent;
+        if (event.key === "Enter") {
+            update_node([]); //todo 此处应该更新节点
+        }
     }
-  }
 </script>
 
-<div class="Properties">
-    {#if showProperties}
-        <div class="mdc-elevation--z4 child" transition:slide|local>
+{#if showProperties}
+    <Content>
+        <List style="padding: 0px">
             {#each properties as property}
-                <div class="property">
-                    <Textfield
-                        class="shaped-outlined"
-                        variant="outlined"
-                        bind:value={value}
-                        on:keydown={handleKeyDown}
-                        label="Label"
-                    />
+                <div transition:slide>
+                    <Item class="textfield" style="padding: 17px">
+                        <Textfield
+                            variant="outlined"
+                            label="{property.name}"
+                            value="{property.value}"
+                            onKeyDown={handleKeyDown}
+                        />
+                    </Item>
                 </div>
             {/each}
-        </div>
-    {/if}
-</div>
+        </List>
+    </Content>
+{/if}
 
-<style lang="scss">
-    @import "./Properties";
+<style>
 
-    .child {
-        margin: 3px;
-        padding: 3px;
-        background: rgb(245, 213, 213);
-    }
 </style>
