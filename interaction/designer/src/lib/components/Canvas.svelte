@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { mouseEvent, itemList } from "../scripts/Canvas";
+	import { mouseEvent } from "../scripts/Canvas";
 	import { draggable } from "../scripts/Draggable";
 	import { resize } from "../scripts/Resizable";
-	import { select } from "../scripts/Selectable";
+	import { select, clearSelect } from "../scripts/Selectable";
+	import { addComponent, ComponentsList } from "../scripts/Global";
 
 	function get_scale() {
 		return scale;
@@ -18,9 +19,15 @@
 	let posY = 0;
 	let grid_size = 0;
 
+	function handleClick(e: MouseEvent) {
+		let target = e.target as HTMLElement;
+		if (target.id === "root")
+			clearSelect();
+	}
+
 	function handleWheel(e: WheelEvent) {
 		let target = e.target as HTMLElement;
-		if (target.id != "root")
+		if (target.id === "")
 			return;
 		e.preventDefault();
 		let scale_size = (e.shiftKey ? 0.2 : 1) * e.deltaY;
@@ -51,9 +58,18 @@
 
 		grid_size = scale > 1.3 ? 20 : 0;
 	}
+	$: items = [];
+	ComponentsList.subscribe((value) => {
+		items = [];
+		let i: string;
+		for (i in value) {
+			items = [...items, value[i]];
+		}
+	});
+
 </script>
 
-<svelte:window on:wheel|nonpassive={handleWheel} />
+<svelte:window on:wheel|nonpassive={handleWheel} on:click={handleClick}/>
 
 <div
 	id="root"
@@ -61,15 +77,15 @@
 	use:mouseEvent={is_placing}
 	style="transform: scale({scale}) translate({posX}px,{posY}px); background-size: {grid_size}px {grid_size}px;"
 >
-	{#each $itemList as item}
+	{#each items as item}
 		<div
 			id="{item.id}-handle"
 			use:resize={get_scale}
 			use:select
-			style="transform: translate({item.x}px,{item.y}px); width: {item.width +
-				4}px; height: {item.height + 4}px; position: absolute;"
+			style="transform: translate({item.obj.x}px,{item.obj.y}px); width: {item.obj.width +
+				4}px; height: {item.obj.height + 4}px; position: absolute;"
 		>
-			<div id={item.id} use:draggable={get_scale} style="{item.style}}" />
+			<div id={item.obj.id} use:draggable={get_scale} style="{item.obj.style}}" />
 		</div>
 	{/each}
 </div>

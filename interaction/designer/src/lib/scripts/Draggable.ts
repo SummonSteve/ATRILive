@@ -1,4 +1,5 @@
 import { spring } from 'svelte/motion'
+import { ComponentsList } from "./Global";
 
 let useGrid = false;
 let useBoarder = true;

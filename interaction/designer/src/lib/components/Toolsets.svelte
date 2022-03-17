@@ -4,7 +4,6 @@
     import TopAppBar, { Row, Section, Title } from "@smui/top-app-bar";
     import Select, { Option } from "@smui/select";
     import IconButton, { Icon } from "@smui/icon-button";
-    import Checkbox from "@smui/checkbox";
     import { Rect } from "../scripts/Components";
     import {
         draggable,
@@ -12,7 +11,6 @@
         toggleBoarder,
     } from "../scripts/Draggable";
     import { toggleDragGrid } from "../scripts/Resizable";
-    import { itemList, addItem } from "../scripts/Canvas";
     import Drawer, { AppContent, Content } from "@smui/drawer";
     import { fade, fly } from "svelte/transition";
     import Properties from "../components/Properties.svelte";
@@ -46,7 +44,6 @@
 
     function add_rect() {
         let rect1 = new Rect(0, 0, 100, 100);
-        addItem(rect1);
     }
 </script>
 

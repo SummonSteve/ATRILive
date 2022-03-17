@@ -1,5 +1,4 @@
-import { addItem } from "./Canvas";
-import { show_properties } from "./Properties";
+import { showProperties, hideProperties } from "./Properties";
 
 
 let selectedNodeId: string;
@@ -13,7 +12,7 @@ function select(node: HTMLDivElement) {
         selectedNodeId = node.id;
 
         node.style.backgroundColor = "rgba(0, 0, 0, 0.2)";
-        show_properties(node.id);
+        showProperties(node.id);
     }
 
     return {
@@ -23,4 +22,12 @@ function select(node: HTMLDivElement) {
     }
 }
 
-export { select }
+function clearSelect() {
+    if (selectedNodeId) {
+        document.getElementById(selectedNodeId).style.backgroundColor = "rgba(0, 0, 0, 0)";
+        selectedNodeId = null;
+        hideProperties();
+    }
+}
+
+export { select, clearSelect }

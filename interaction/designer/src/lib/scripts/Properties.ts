@@ -1,26 +1,28 @@
 import { writable } from 'svelte/store';
+import { ComponentsList } from './Global';
 
 export const isShowProperties = writable(false);
 export const Properties = writable([]);
 
 let selected_node = "";
 
-function show_properties(node_id: string) {
-    Properties.set([
-        {name: 'rect', value: 'rect'},
-        {name: 'rect', value: 'rect'},
-        {name: 'rect', value: 'rect'},
-        {name: 'rect', value: 'rect'},
-        {name: 'rect', value: 'rect'},
-        {name: 'rect', value: 'rect'},
-        {name: 'rect', value: 'rect'},
-    ]); //todo get properties from node
+let components: JSON;
+
+ComponentsList.subscribe(obj => {
+    components = obj;
+});
+
+function showProperties(node_id: string) {
+    let properties = components[node_id.split('-')[0]].properties;
+    
+    Properties.set(properties);
     isShowProperties.set(true);
     selected_node = node_id;
 }
 
-function hide_properties(node_id: string) {
 
+function hideProperties() {
+    Properties.set([]);
 }
 
 function update_node(propertiesToUpdate: []) {
@@ -28,4 +30,4 @@ function update_node(propertiesToUpdate: []) {
     
 }
 
-export { show_properties, hide_properties, update_node };
+export { showProperties, hideProperties, update_node };

@@ -1,4 +1,4 @@
-import { itemList } from './Canvas';
+import { ComponentsList } from "./Global";
 
 let useGrid = false;
 
@@ -47,16 +47,12 @@ function resize(node, getScale) {
             childNode.style.height = Number(node.style.height.split('px')[0]) - 4 + 'px';
 
         }
-
-        itemList.update((items) => {
-            return items.map((item) => {
-                if (item.id === node.id.split('-')[0]) {
-                    item.width = Number(node.style.width.split('px')[0]) - 4;
-                    item.height = Number(node.style.height.split('px')[0]) - 4;
-                    console.log(item.width, item.height)
-                }
-                return item;
-            });
+        ComponentsList.update((components) => {
+            let component = components[node.id.split('-')[0]];
+            component.width = Number(node.style.width.split('px')[0]) - 4;
+            component.height = Number(node.style.height.split('px')[0]) - 4;
+            components[node.id.split('-')[0]] = component;
+            return components;
         });
 
         active.classList.remove('selected')
