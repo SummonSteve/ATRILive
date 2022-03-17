@@ -1,5 +1,6 @@
 import { spring } from 'svelte/motion'
 import { ComponentsList } from "./Global";
+import { showProperties } from './Properties';
 
 let useGrid = false;
 let useBoarder = true;
@@ -101,6 +102,8 @@ function draggable(node, getscale) {
 
     function handleMouseup(event) {
 
+        scale = getscale();
+
         node.classList.remove('dragged')
         lastX = event.clientX;
         lastY = event.clientY;
@@ -116,6 +119,15 @@ function draggable(node, getscale) {
             }))
         }
         dropTarget = null
+
+        ComponentsList.update((components) => {
+            let component = components[node.id.split('-')[0]];
+            component.properties[0].value = useGrid ? offsetX - offsetX % 20 : Math.ceil(offsetX);
+            component.properties[1].value = useGrid ? offsetY - offsetY % 20 : Math.ceil(offsetY);
+            return components;
+        });
+
+        showProperties(node.id.split('-')[0]);
 
         window.removeEventListener('mousemove', handleMousemove);
         window.removeEventListener('mouseup', handleMouseup);

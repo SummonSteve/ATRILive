@@ -8,14 +8,15 @@ enum ComponentType {
     Image,
     Text,
     CubismLive2d,
+    CollisionRect,
 }
 
 class Component {
     public id: string;
     public obj: Drawable;
-    public properties: JSON;
+    public properties: Array<JSON>;
 
-    constructor(id: string, obj: Drawable, properties: JSON) {
+    constructor(id: string, obj: Drawable, properties: Array<JSON>) {
         this.id = id;
         this.obj = obj;
         this.properties = properties;
@@ -88,13 +89,13 @@ class Rect extends Drawable {
         this.height = h;
         this.color = 'ff3841';
         this.style = `transform: translate(2px,2px); width: ${this.width}px; height: ${this.height}px; position: absolute; display: inline-block; background: rgba(255, 65, 65, 0.5);`;
-    
+
         let properties = [
-            {'name': 'x', 'value': this.x},
-            {'name': 'y', 'value': this.y},
-            {'name': 'width', 'value': this.width},
-            {'name': 'height', 'value': this.height},
-            {'name': 'color', 'value': this.color},
+            { 'name': 'x', 'value': this.x },
+            { 'name': 'y', 'value': this.y },
+            { 'name': 'width', 'value': this.width },
+            { 'name': 'height', 'value': this.height },
+            { 'name': 'color', 'value': this.color },
         ];
         addComponent(this.id, this, properties);
     }
@@ -111,6 +112,10 @@ class Line extends Drawable {
         this.height = 1;
         this.style = `transform: translate(2px,2px); width: ${this.width}px; height: ${this.height}px; position: absolute; display: inline-block; background: rgba(255, 65, 65, 0.5);`;
     }
+}
+
+class CollisionRect extends Rect {
+
 }
 
 export { Rect, ComponentType, Component }

@@ -4,6 +4,7 @@
 	import { resize } from "../scripts/Resizable";
 	import { select, clearSelect } from "../scripts/Selectable";
 	import { addComponent, ComponentsList } from "../scripts/Global";
+import Live2d from "./Live2d.svelte";
 
 	function get_scale() {
 		return scale;
@@ -21,14 +22,12 @@
 
 	function handleClick(e: MouseEvent) {
 		let target = e.target as HTMLElement;
-		if (target.id === "root")
-			clearSelect();
+		if (target.id === "root") clearSelect();
 	}
 
 	function handleWheel(e: WheelEvent) {
 		let target = e.target as HTMLElement;
-		if (target.id === "")
-			return;
+		if (target.id === "") return;
 		e.preventDefault();
 		let scale_size = (e.shiftKey ? 0.2 : 1) * e.deltaY;
 		scale -= scale > 0.3 || scale_size < 0 ? scale_size / 1500 : 0;
@@ -66,10 +65,9 @@
 			items = [...items, value[i]];
 		}
 	});
-
 </script>
 
-<svelte:window on:wheel|nonpassive={handleWheel} on:click={handleClick}/>
+<svelte:window on:wheel|nonpassive={handleWheel} on:click={handleClick} />
 
 <div
 	id="root"
@@ -77,15 +75,21 @@
 	use:mouseEvent={is_placing}
 	style="transform: scale({scale}) translate({posX}px,{posY}px); background-size: {grid_size}px {grid_size}px;"
 >
+	
 	{#each items as item}
 		<div
 			id="{item.id}-handle"
 			use:resize={get_scale}
 			use:select
-			style="transform: translate({item.obj.x}px,{item.obj.y}px); width: {item.obj.width +
-				4}px; height: {item.obj.height + 4}px; position: absolute;"
+			style="transform: translate({item.obj.x}px,{item.obj
+				.y}px); width: {item.obj.width + 4}px; height: {item.obj
+				.height + 4}px; position: absolute;"
 		>
-			<div id={item.obj.id} use:draggable={get_scale} style="{item.obj.style}}" />
+			<div
+				id={item.id}
+				use:draggable={get_scale}
+				style="{item.obj.style}}"
+			/>
 		</div>
 	{/each}
 </div>

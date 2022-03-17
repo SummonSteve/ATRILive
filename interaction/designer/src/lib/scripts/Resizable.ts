@@ -1,4 +1,5 @@
 import { ComponentsList } from "./Global";
+import { showProperties } from "./Properties";
 
 let useGrid = false;
 
@@ -38,6 +39,8 @@ function resize(node, getScale) {
     function onMouseup(event) {
         if (!active) return
 
+        let scale = getScale()
+
         let childNode = document.getElementById(node.id.split('-')[0]);
 
         if (childNode) {
@@ -49,16 +52,23 @@ function resize(node, getScale) {
         }
         ComponentsList.update((components) => {
             let component = components[node.id.split('-')[0]];
-            component.width = Number(node.style.width.split('px')[0]) - 4;
-            component.height = Number(node.style.height.split('px')[0]) - 4;
+            component.obj.width = Number(node.style.width.split('px')[0]) - 4;
+            component.obj.height = Number(node.style.height.split('px')[0]) - 4;
             components[node.id.split('-')[0]] = component;
+
+            component.properties[2].value = Math.ceil(Number(node.style.width.split('px')[0]) - 4);
+            component.properties[3].value = Math.ceil(Number(node.style.height.split('px')[0]) - 4);
+
             return components;
         });
+
+        showProperties(node.id.split('-')[0]);
 
         active.classList.remove('selected')
         active = null
         initialRect = null
         initialPos = null
+
     }
 
     function onMove(event) {

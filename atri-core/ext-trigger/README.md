@@ -19,6 +19,7 @@ Trigger分为自定义Trigger和内置（Builtin）Trigger
 - [ ] **PatternMatch**: 使用图像相似度匹配触发；一般用于难以直接获取的屏幕信息，比如你希望在游戏抽卡的时候根据结果为观众呈现不同的效果，这会很有用。
 - [ ] **Http**: 通过自定义http响应触发
 - [ ] **Chat** 聊天/弹幕 触发器
+- [ ] **CollisionShape** 碰撞检测触发器
 
 ### 自定义trigger
 
