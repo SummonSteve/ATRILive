@@ -116,10 +116,10 @@ class Live2d extends Drawable {
         this.size = new CanvasSize(this.id, this.width, this.height);
 
         let properties = [
-            { 'name': 'x', 'value': this.x },
-            { 'name': 'y', 'value': this.y },
-            { 'name': 'width', 'value': this.width },
-            { 'name': 'height', 'value': this.height },
+            { 'name': 'X', 'value': this.x },
+            { 'name': 'Y', 'value': this.y },
+            { 'name': 'Width', 'value': this.width },
+            { 'name': 'Height', 'value': this.height },
         ];
         
         addComponent(this.id, this, properties);
