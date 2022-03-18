@@ -1,4 +1,5 @@
 import { addComponent } from "./Global";
+import { CanvasSize } from "./Live2d";
 
 enum ComponentType {
     Object,
@@ -7,7 +8,7 @@ enum ComponentType {
     Ellipse,
     Image,
     Text,
-    CubismLive2d,
+    Live2d,
     CollisionRect,
 }
 
@@ -24,6 +25,7 @@ class Component {
 }
 
 abstract class Drawable {
+    public type: ComponentType;
     public x: number;
     public y: number;
     public width: number;
@@ -85,6 +87,7 @@ class Rect extends Drawable {
 
     constructor(x: number, y: number, h: number, w: number) {
         super(x, y);
+        this.type = ComponentType.Rect;
         this.width = w;
         this.height = h;
         this.color = 'ff3841';
@@ -97,6 +100,28 @@ class Rect extends Drawable {
             { 'name': 'height', 'value': this.height },
             { 'name': 'color', 'value': this.color },
         ];
+        addComponent(this.id, this, properties);
+    }
+}
+
+class Live2d extends Drawable {
+    
+    public size: CanvasSize;
+
+    constructor(x: number, y: number, h: number, w: number) {
+        super(x, y);
+        this.type = ComponentType.Live2d;
+        this.width = w;
+        this.height = h;
+        this.size = new CanvasSize(this.id, this.width, this.height);
+
+        let properties = [
+            { 'name': 'x', 'value': this.x },
+            { 'name': 'y', 'value': this.y },
+            { 'name': 'width', 'value': this.width },
+            { 'name': 'height', 'value': this.height },
+        ];
+        
         addComponent(this.id, this, properties);
     }
 }
@@ -118,4 +143,4 @@ class CollisionRect extends Rect {
 
 }
 
-export { Rect, ComponentType, Component }
+export { Rect, Live2d, ComponentType, Component }

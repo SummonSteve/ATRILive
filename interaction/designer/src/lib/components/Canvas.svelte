@@ -4,7 +4,8 @@
 	import { resize } from "../scripts/Resizable";
 	import { select, clearSelect } from "../scripts/Selectable";
 	import { addComponent, ComponentsList } from "../scripts/Global";
-import Live2d from "./Live2d.svelte";
+	import { ComponentType } from "../scripts/Components";
+	import Live2d from "./Live2d.svelte";
 
 	function get_scale() {
 		return scale;
@@ -55,7 +56,7 @@ import Live2d from "./Live2d.svelte";
 		posX += x;
 		posY += y;
 
-		grid_size = scale > 1.3 ? 20 : 0;
+		grid_size = scale > 1.3 ? 20 : 40;
 	}
 	$: items = [];
 	ComponentsList.subscribe((value) => {
@@ -75,7 +76,6 @@ import Live2d from "./Live2d.svelte";
 	use:mouseEvent={is_placing}
 	style="transform: scale({scale}) translate({posX}px,{posY}px); background-size: {grid_size}px {grid_size}px;"
 >
-	
 	{#each items as item}
 		<div
 			id="{item.id}-handle"
@@ -85,19 +85,25 @@ import Live2d from "./Live2d.svelte";
 				.y}px); width: {item.obj.width + 4}px; height: {item.obj
 				.height + 4}px; position: absolute;"
 		>
-			<div
-				id={item.id}
-				use:draggable={get_scale}
-				style="{item.obj.style}}"
-			/>
+			{#if item.obj.type == ComponentType.Rect}
+				<div
+					id={item.id}
+					use:draggable={get_scale}
+					style="{item.obj.style}}"
+				/>
+			{:else if item.obj.type == ComponentType.Live2d}
+				<div id={item.id} use:draggable={get_scale}>
+					<Live2d />
+				</div>
+			{/if}
 		</div>
 	{/each}
 </div>
 
 <style>
 	.Canvas {
-		width: 960px;
-		height: 540px;
+		width: 1920px;
+		height: 1080px;
 		margin-left: 2px;
 		border: 1px dashed rgb(0, 0, 0);
 	}

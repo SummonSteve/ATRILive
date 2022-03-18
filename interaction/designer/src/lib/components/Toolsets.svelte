@@ -4,7 +4,7 @@
     import TopAppBar, { Row, Section, Title } from "@smui/top-app-bar";
     import Select, { Option } from "@smui/select";
     import IconButton, { Icon } from "@smui/icon-button";
-    import { Rect } from "../scripts/Components";
+    import { Rect, Live2d } from "../scripts/Components";
     import {
         draggable,
         toggleCanvasGrid,
@@ -40,10 +40,14 @@
         dawerOpen = !dawerOpen;
     }
 
-    let ComponentsAvailable = [{ item: "Rect", f: add_rect }];
+    let ComponentsAvailable = [{ item: "Rect", f: add_rect }, { item: "Live2d", f: add_live2d }];
 
     function add_rect() {
         let rect1 = new Rect(0, 0, 100, 100);
+    }
+
+    function add_live2d() {
+        let rect1 = new Live2d(0, 0, 500, 500);
     }
 </script>
 
