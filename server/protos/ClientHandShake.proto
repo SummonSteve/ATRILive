@@ -1,0 +1,13 @@
+// Used for Client -> Server Handshake
+
+syntax = "proto3";
+
+package client_handshake;
+
+message HandshakeRequest { string client_id; }
+
+message HandshakeResponse { string client_id; }
+
+service Handshake { 
+    rpc HandshakeRequest (HandshakeRequest) returns (HandshakeResponse);
+}

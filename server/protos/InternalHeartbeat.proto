@@ -1,0 +1,13 @@
+// Used for landmark server Keep-alive
+
+syntax = "proto3";
+
+package internal_heartbeat;
+
+message HeartbeatRequest { string client_id }
+
+message HeartbeatResponse { string client_id }
+
+service Heartbeat {
+    rpc HeartbeatRequest (HeartbeatRequest) returns (HeartbeatResponse);
+}

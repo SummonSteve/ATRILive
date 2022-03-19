@@ -1,0 +1,10 @@
+// Used for internal handshake when server start first time
+// Ensure the landmark server is ready
+
+syntax = "proto3";
+
+package internal_handshake;
+
+message HandshakeRequest { string client_id; }
+
+message HandshakeResponse { string client_id; }

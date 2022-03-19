@@ -1,2 +1,4 @@
 .VSCodeCounter
-server-side/target/
+server/atri/target/
+server/mediapipe-backend/env/
+

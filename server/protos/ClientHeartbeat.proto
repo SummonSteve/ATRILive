@@ -1,0 +1,9 @@
+// Used for client Keep-alive
+
+syntax = "proto3";
+
+package client_heartbeat;
+
+message HeartbeatRequest { string client_id }
+
+message HeartbeatResponse { string client_id }
